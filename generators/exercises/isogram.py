@@ -6,8 +6,8 @@ extern int is_isogram(const char *str);
 
 def gen_func_body(prop, inp, expected):
     phrase = inp["phrase"]
-    if expected:
-        s = f'TEST_ASSERT_TRUE({prop}("{phrase}"));\n'
-    else:
-        s = f'TEST_ASSERT_FALSE({prop}("{phrase}"));\n'
-    return s
+    return (
+        f'TEST_ASSERT_TRUE({prop}("{phrase}"));\n'
+        if expected
+        else f'TEST_ASSERT_FALSE({prop}("{phrase}"));\n'
+    )

@@ -7,9 +7,10 @@ extern void to_rna(const char *strand, char *buffer);
 """
 
 def gen_func_body(prop, inp, expected):
-    str_list = []
     dna = inp["dna"]
-    str_list.append("char buffer[BUFFER_SIZE];\n\n")
-    str_list.append(f'{prop}("{dna}", buffer);\n')
-    str_list.append(f'TEST_ASSERT_EQUAL_STRING("{expected}", buffer);\n')
+    str_list = [
+        "char buffer[BUFFER_SIZE];\n\n",
+        f'{prop}("{dna}", buffer);\n',
+        f'TEST_ASSERT_EQUAL_STRING("{expected}", buffer);\n',
+    ]
     return "".join(str_list)

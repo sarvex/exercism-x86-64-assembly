@@ -16,11 +16,15 @@ def gen_func_body(prop, inp, expected):
         color_array = str(expected).replace("'", '"')
         color_array = color_array.replace("[", "{")
         color_array = color_array.replace("]", "}")
-        str_list.append(f"const char **color_array = {prop}();\n")
-        str_list.append(f"const char *expected[] = {color_array};\n")
-        str_list.append("int size;\n\n")
-        str_list.append("for (size = 0; color_array[size]; size++) {\n")
-        str_list.append("}\n")
-        str_list.append("TEST_ASSERT_EQUAL_INT(ARRAY_SIZE(expected), size);\n")
-        str_list.append("TEST_ASSERT_EQUAL_STRING_ARRAY(expected, color_array, size);\n")
+        str_list.extend(
+            (
+                f"const char **color_array = {prop}();\n",
+                f"const char *expected[] = {color_array};\n",
+                "int size;\n\n",
+                "for (size = 0; color_array[size]; size++) {\n",
+                "}\n",
+                "TEST_ASSERT_EQUAL_INT(ARRAY_SIZE(expected), size);\n",
+                "TEST_ASSERT_EQUAL_STRING_ARRAY(expected, color_array, size);\n",
+            )
+        )
     return "".join(str_list)

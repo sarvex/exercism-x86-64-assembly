@@ -40,11 +40,19 @@ def gen_func_body(prop, inp, expected):
         item_list = item_list.replace("]", "}")
         if expected:
             str_list.append(f"int expected[] = {item_list};\n")
-        str_list.append("struct item_list item_list;\n\n")
-        str_list.append(f"{prop}({score}, &item_list);\n")
+        str_list.extend(
+            (
+                "struct item_list item_list;\n\n",
+                f"{prop}({score}, &item_list);\n",
+            )
+        )
         if expected:
-            str_list.append("TEST_ASSERT_EQUAL_INT(ARRAY_SIZE(expected), item_list.size);\n")
-            str_list.append("TEST_ASSERT_EQUAL_INT_ARRAY(expected, item_list.items, item_list.size);\n")
+            str_list.extend(
+                (
+                    "TEST_ASSERT_EQUAL_INT(ARRAY_SIZE(expected), item_list.size);\n",
+                    "TEST_ASSERT_EQUAL_INT_ARRAY(expected, item_list.items, item_list.size);\n",
+                )
+            )
         else:
             str_list.append("TEST_ASSERT_EQUAL_INT(0, item_list.size);\n")
     return "".join(str_list)

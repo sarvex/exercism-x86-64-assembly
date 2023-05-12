@@ -7,10 +7,8 @@ extern void two_fer(const char *name, char *buffer);
 """
 
 def gen_func_body(prop, inp, expected):
-    str_list = []
-    name = inp["name"]
-    str_list.append("char buffer[BUFFER_SIZE];\n\n")
-    if name:
+    str_list = ["char buffer[BUFFER_SIZE];\n\n"]
+    if name := inp["name"]:
         str_list.append(f'{prop}("{name}", buffer);\n')
     else:
         str_list.append(f"{prop}(NULL, buffer);\n")

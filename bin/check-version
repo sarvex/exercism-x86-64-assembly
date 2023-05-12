@@ -24,9 +24,8 @@ def main():
     with open(path, "r") as f:
         line = f.readline()
     p = re.compile(r"// Version: (\d+\.\d+\.\d+)")
-    m = p.match(line)
-    if m:
-        current_version = m.group(1)
+    if m := p.match(line):
+        current_version = m[1]
         if version != current_version:
             print(f"A new version of {args.exercise} ({version}) is available.")
         else:

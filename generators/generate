@@ -29,16 +29,14 @@ def flatten_cases(data):
     cases = []
     for i in data["cases"]:
         if "cases" in i:
-            for j in i["cases"]:
-                cases.append(j)
+            cases.extend(iter(i["cases"]))
         else:
             cases.append(i)
     return cases
 
 
 def gen_main(cases):
-    str_list = []
-    str_list.append("int main(void) {\n    UNITY_BEGIN();\n")
+    str_list = ["int main(void) {\n    UNITY_BEGIN();\n"]
     for case in cases:
         funcname = desc_to_funcname(case["description"])
         str_list.append(f"    RUN_TEST({funcname});\n")
@@ -47,9 +45,8 @@ def gen_main(cases):
 
 
 def gen_test_case(mod, case, test_ignore):
-    str_list = []
     funcname = desc_to_funcname(case["description"])
-    str_list.append(f"void {funcname}(void) {{\n")
+    str_list = [f"void {funcname}(void) {{\n"]
     if test_ignore:
         str_list.append("    TEST_IGNORE();\n")
     prop = camel_to_snake(case["property"])
@@ -69,11 +66,12 @@ def gen_test_cases(mod, cases):
 
 
 def gen_test_file(mod, version, cases):
-    str_list = []
-    str_list.append(f"// Version: {version}\n\n")
-    str_list.append(mod.FUNC_PROTO)
-    str_list.append("\nvoid setUp(void) {\n}\n\nvoid tearDown(void) {\n}\n\n")
-    str_list.append(gen_test_cases(mod, cases))
+    str_list = [
+        f"// Version: {version}\n\n",
+        mod.FUNC_PROTO,
+        "\nvoid setUp(void) {\n}\n\nvoid tearDown(void) {\n}\n\n",
+        gen_test_cases(mod, cases),
+    ]
     str_list.append(gen_main(cases))
     return "".join(str_list)
 
@@ -86,7 +84,7 @@ def main():
     version = data.get("version", 0)
     cases = flatten_cases(data)
     exercise = args.exercise.replace("-", "_")
-    mod = importlib.import_module("exercises." + exercise)
+    mod = importlib.import_module(f"exercises.{exercise}")
     s = gen_test_file(mod, version, cases)
     path = f"{sys.path[0]}/../exercises/practice/{args.exercise}/{exercise}_test.c"
     with open(path, "w") as f:

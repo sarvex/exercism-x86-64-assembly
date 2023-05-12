@@ -13,8 +13,12 @@ def gen_func_body(prop, inp, expected):
     if type(expected) is not int:
         expected = -1
     if inp["array"]:
-        str_list.append(f"int array[] = {array};\n\n")
-        str_list.append(f"TEST_ASSERT_EQUAL_INT({expected}, {prop}(array, ARRAY_SIZE(array), {value}));\n")
+        str_list.extend(
+            (
+                f"int array[] = {array};\n\n",
+                f"TEST_ASSERT_EQUAL_INT({expected}, {prop}(array, ARRAY_SIZE(array), {value}));\n",
+            )
+        )
     else:
         str_list.append(f"TEST_ASSERT_EQUAL_INT({expected}, {prop}(NULL, 0, {value}));\n")
     return "".join(str_list)
